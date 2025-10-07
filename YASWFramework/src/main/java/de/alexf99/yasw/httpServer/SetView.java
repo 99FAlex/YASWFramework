@@ -104,13 +104,9 @@ public class SetView implements HttpHandler {
         if (path.endsWith(".js")) return "application/javascript; charset=UTF-8";
         if (path.endsWith(".png")) return "image/png";
         if (path.endsWith(".jpg") || path.endsWith(".jpeg")) return "image/jpeg";
-        if (path.endsWith(".gif")) return "image/gif";
         if (path.endsWith(".svg")) return "image/svg+xml";
         if (path.endsWith(".ico")) return "image/x-icon";
         if (path.endsWith(".json")) return "application/json; charset=UTF-8";
-        if (path.endsWith(".woff")) return "font/woff";
-        if (path.endsWith(".woff2")) return "font/woff2";
-        if (path.endsWith(".ttf")) return "font/ttf";
         return "text/plain; charset=UTF-8";
     }
 }
