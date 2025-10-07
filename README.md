@@ -1,19 +1,23 @@
 # YASWFramework
 A RESTful API Framework
 
-To initiate Restful Server
-___________________________________________________________
+
+
+
+To initiate Restful Server:
 YaswHttpServer.init(port);
-___________________________________________________________
 
-Add Mapping by using
-___________________________________________________________
+
+
+
+Add Mapping by using:
 YaswHttpServer.server.createContext("/ExampleMapping", new MyHandler);
-___________________________________________________________
 
-Start/Stop Server
-___________________________________________________________
+
+
+
+Start/Stop Server:
 YaswHttpServer.server.start();
 YaswHttpServer.server.stop();
-___________________________________________________________
+
 
