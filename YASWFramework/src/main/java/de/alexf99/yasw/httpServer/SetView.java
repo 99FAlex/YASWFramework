@@ -2,6 +2,7 @@ package de.alexf99.yasw.httpServer;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import de.alexf99.yasw.SystemOutputManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,21 +15,21 @@ public class SetView implements HttpHandler {
     public SetView(String defaultFilename) {
         this.defaultFilename = defaultFilename;
 
-        System.out.println("=== SetView initialized ===");
-        System.out.println("Default file: " + defaultFilename);
+        SystemOutputManager.writeHttpManager(false, "=== SetView initialized ===");
+        SystemOutputManager.writeHttpManager(false, "Default file: " + defaultFilename);
 
         // Test if the default file exists
         try (InputStream test = getClass().getResourceAsStream("/" + defaultFilename)) {
             if (test != null) {
-                System.out.println("✓ Default file found in classpath");
+                SystemOutputManager.writeHttpManager(false, "Default file found in classpath");
             } else {
-                System.err.println("✗ WARNING: Default file NOT found in classpath!");
-                System.err.println("  Looking for: /" + defaultFilename);
+                SystemOutputManager.writeHttpManager(true, "Default file NOT found in classpath!");
+                SystemOutputManager.writeHttpManager(true, "Looking for: /" + defaultFilename);
             }
         } catch (Exception e) {
-            System.err.println("✗ Error checking default file: " + e.getMessage());
+            SystemOutputManager.writeHttpManager(false, "Error checking default file: " + e.getMessage());
         }
-        System.out.println("========================");
+        SystemOutputManager.writeHttpManager(false, "========================");
     }
 
     @Override
@@ -53,24 +54,25 @@ public class SetView implements HttpHandler {
         }
 
         // Debug output
-        System.out.println("=== Request Debug ===");
-        System.out.println("Request URI: " + exchange.getRequestURI());
-        System.out.println("Request Path: " + requestPath);
-        System.out.println("Context Path: " + contextPath);
-        System.out.println("Relative Path: " + relativePath);
-        System.out.println("Loading Resource: " + resourcePath);
-        System.out.println("===================");
+        SystemOutputManager.writeHttpManager(false, "=== Request Debug ===");
+        SystemOutputManager.writeHttpManager(false, "Request URI: " + exchange.getRequestURI());
+        SystemOutputManager.writeHttpManager(false, "Request Path: " + requestPath);
+        SystemOutputManager.writeHttpManager(false, "Context Path: " + contextPath);
+        SystemOutputManager.writeHttpManager(false, "Relative Path: " + relativePath);
+        SystemOutputManager.writeHttpManager(false, "Loading Resource: " + resourcePath);
+        SystemOutputManager.writeHttpManager(false, "===================");
 
         // Get the resource from the classpath
         try (InputStream inputStream = getClass().getResourceAsStream(resourcePath)) {
             if (inputStream == null) {
-                System.err.println("Resource not found: " + resourcePath);
+
+                SystemOutputManager.writeHttpManager(true, "Resource not found: " + resourcePath);
                 sendResponse(exchange, 404, "404 Not Found: " + resourcePath);
                 return;
             }
 
             byte[] responseBytes = inputStream.readAllBytes();
-            System.out.println("Successfully loaded " + responseBytes.length + " bytes");
+            SystemOutputManager.writeHttpManager(false, "Successfully loaded " + responseBytes.length + " bytes");
 
             String contentType = getContentType(resourcePath);
             exchange.getResponseHeaders().set("Content-Type", contentType);

@@ -3,6 +3,7 @@ package de.alexf99.yasw.httpServer;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import de.alexf99.yasw.SystemOutputManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,7 +14,8 @@ public class YaswHttpServer {
     public static HttpServer server;
     public static void init(int port) throws IOException {
         server = HttpServer.create(new InetSocketAddress(port), 0);
-        System.out.println("Http Server created on port: " + port);
+        SystemOutputManager.writeHttpManager(false, "Http Server created on port: " + port);
+        SystemOutputManager.writeHttpManager(false, "Use the absolute path for SetView");
     }
     public void createContext(String path, HttpHandler code){
         server.createContext(path, code);
