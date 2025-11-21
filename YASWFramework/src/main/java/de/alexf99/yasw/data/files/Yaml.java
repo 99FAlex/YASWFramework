@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Yaml {
@@ -68,6 +70,54 @@ public class Yaml {
         }
 
         return "";
+    }
+
+    public static Object getKey(Path path, String key) throws IOException {
+        Path absolutePath = Path.of(getAbsolutePath()).getParent();
+        Path createFilePath = Paths.get(Main.folderNameFiles, String.valueOf(path));
+        File file = new File(String.valueOf(createFilePath));
+
+
+        if (file.getAbsolutePath().startsWith(String.valueOf(absolutePath)) && !createFilePath.getParent().toString().contains("..")){
+            if (!createFilePath.getFileName().toString().endsWith(".yml")) {
+                SystemOutputManager.writeDataYaml(true, "File has to end with .yml");
+            }else {
+                Scanner scanner = new Scanner(createFilePath);
+                YaswStringBuilder rawText = new YaswStringBuilder();
+                while (scanner.hasNextLine()){
+                    String nextLine = scanner.nextLine();
+                    if (nextLine.contains(":")){
+                        String[]lineValue = nextLine.split(": ");
+                        if (lineValue[0].contains(key)){
+                            if (lineValue.length >= 2){
+                                return lineValue[1];
+
+                            }else {
+                                String nextLineScanner = scanner.nextLine();
+                                ArrayList<String> sequence = new ArrayList<String>();
+                                while (nextLineScanner.startsWith(" ")){
+                                    if (nextLineScanner.startsWith("  - ")){
+                                        String[] item = nextLineScanner.split("- ");
+                                        sequence.add(item[1]);
+                                    }
+
+                                    nextLineScanner = scanner.nextLine();
+                                }
+                                Object[] returnValue = sequence.toArray(new String[0]);
+                                return returnValue;
+                            }
+                        }
+                    }
+                }
+                return rawText.toString();
+            }
+        }else {
+
+            SystemOutputManager.writeDataYaml(true, "Security | Path is outside the secure Directory");
+
+        }
+
+        return "test";
     }
 
 }
