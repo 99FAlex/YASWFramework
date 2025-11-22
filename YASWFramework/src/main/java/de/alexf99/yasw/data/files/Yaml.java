@@ -59,8 +59,9 @@ public class Yaml {
                 Scanner scanner = new Scanner(createFilePath);
                 YaswStringBuilder rawText = new YaswStringBuilder();
                 while (scanner.hasNextLine()){
-                    rawText.append(scanner.nextLine());
+                    rawText.appendNewLine(scanner.nextLine());
                 }
+                scanner.close();
                 return rawText.toString();
             }
         }else {
@@ -93,22 +94,24 @@ public class Yaml {
                                 return lineValue[1];
 
                             }else {
-                                String nextLineScanner = scanner.nextLine();
                                 ArrayList<String> sequence = new ArrayList<String>();
-                                while (nextLineScanner.startsWith(" ")){
-                                    if (nextLineScanner.startsWith("  - ")){
+
+                                while (scanner.hasNextLine()){
+                                    System.out.println("test");
+                                    String nextLineScanner = scanner.nextLine().trim();
+
+                                    if (nextLineScanner.startsWith("-")){
                                         String[] item = nextLineScanner.split("- ");
                                         sequence.add(item[1]);
                                     }
-
-                                    nextLineScanner = scanner.nextLine();
                                 }
-                                Object[] returnValue = sequence.toArray(new String[0]);
+                                Object[] returnValue = sequence.toArray();
                                 return returnValue;
                             }
                         }
                     }
                 }
+                scanner.close();
                 return rawText.toString();
             }
         }else {
@@ -118,6 +121,36 @@ public class Yaml {
         }
 
         return "test";
+    }
+
+
+    public static void addKeyValue(Path path, String key, String value) throws IOException {
+        Path absolutePath = Path.of(getAbsolutePath()).getParent();
+        Path createFilePath = Paths.get(Main.folderNameFiles, String.valueOf(path));
+        File file = new File(String.valueOf(createFilePath));
+
+
+        if (file.getAbsolutePath().startsWith(String.valueOf(absolutePath)) && !createFilePath.getParent().toString().contains("..")){
+            if (!createFilePath.getFileName().toString().endsWith(".yml")) {
+                SystemOutputManager.writeDataYaml(true, "File has to end with .yml");
+            }else {
+                String raw = readRaw(path);
+
+                String newContent = raw + System.lineSeparator() + key + ": " + value;
+                try (FileWriter ymlFile = new FileWriter(String.valueOf(createFilePath))) {
+                    System.out.println("TEST" + raw); // 'raw' ist der Inhalt VOR dem Schreiben
+
+                    // 4. Den neuen Inhalt in die Datei schreiben
+                    ymlFile.write(newContent);
+                    // flush() und close() werden durch das try-with-resources automatisch aufgerufen
+                }
+            }
+        }else {
+
+            SystemOutputManager.writeDataYaml(true, "Security | Path is outside the secure Directory");
+
+        }
+
     }
 
 }

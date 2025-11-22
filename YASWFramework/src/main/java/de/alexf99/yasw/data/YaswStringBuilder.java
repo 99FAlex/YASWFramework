@@ -17,8 +17,8 @@ public class YaswStringBuilder {
     }
     public YaswStringBuilder appendNewLine(Object obj) {
         if (!sb.isEmpty()){
-            sb.append("\n");
-            //sb.append(System.lineSeparator());
+            //sb.append("\n");
+            sb.append(System.lineSeparator());
         }
         sb.append(obj != null ? obj.toString() : "");
         return null;
