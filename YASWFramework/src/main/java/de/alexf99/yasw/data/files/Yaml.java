@@ -138,11 +138,9 @@ public class Yaml {
 
                 String newContent = raw + System.lineSeparator() + key + ": " + value;
                 try (FileWriter ymlFile = new FileWriter(String.valueOf(createFilePath))) {
-                    System.out.println("TEST" + raw); // 'raw' ist der Inhalt VOR dem Schreiben
+                    System.out.println("TEST" + raw);
 
-                    // 4. Den neuen Inhalt in die Datei schreiben
                     ymlFile.write(newContent);
-                    // flush() und close() werden durch das try-with-resources automatisch aufgerufen
                 }
             }
         }else {
